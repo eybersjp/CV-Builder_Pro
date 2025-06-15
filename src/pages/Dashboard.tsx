@@ -1,11 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Plus, FileText } from "lucide-react";
+import { Plus, FileText, Upload } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 // Fetch current user profile (first name)
@@ -51,6 +51,7 @@ async function createResume({ userId, title }: { userId: string; title?: string 
 const Dashboard = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
 
   // Fetch user profile (first name and id)
   const {
@@ -95,6 +96,18 @@ const Dashboard = () => {
     createResumeMutation.mutate();
   }, [createResumeMutation]);
 
+  const onUploadClick = () => {
+    uploadInputRef.current?.click();
+  };
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // For now, just show a toast and clear input
+    toast.info(`Selected file: ${file.name}`);
+    e.target.value = ""; // Reset input so the same file can be picked again
+  };
+
   const onCardClick = useCallback(
     (resumeId: string) => {
       navigate(`/editor/${resumeId}`);
@@ -114,7 +127,7 @@ const Dashboard = () => {
             ? "Welcome!"
             : `Welcome back${userProfile?.first_name ? `, ${userProfile.first_name}` : ""}!`}
         </h1>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Button
             onClick={onCreateResume}
             size="lg"
@@ -124,6 +137,26 @@ const Dashboard = () => {
           >
             <Plus className="mr-2" aria-hidden="true" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
           </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="lg"
+            className="font-semibold px-5 py-3 rounded-lg text-base shadow"
+            onClick={onUploadClick}
+            aria-label="Upload Existing CV"
+          >
+            <Upload className="mr-2" aria-hidden="true" /> Upload Existing CV
+          </Button>
+          {/* Hidden file input */}
+          <input
+            ref={uploadInputRef}
+            type="file"
+            accept=".pdf,.docx"
+            className="hidden"
+            onChange={onFileChange}
+            aria-label="Upload CV"
+            tabIndex={-1}
+          />
         </div>
       </header>
 
