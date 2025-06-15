@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import ThreePanelLayout from "@/components/layout/ThreePanelLayout";
@@ -10,6 +9,7 @@ import ResumePreview from "@/components/resume/ResumePreview";
 import { ResumeProvider, useResume } from "@/contexts/ResumeContext";
 import { usePDFExport } from "@/hooks/usePDFExport";
 import { Download, Loader } from "lucide-react";
+import AtsScore from "@/components/ats/AtsScore";
 
 const SaveStatus = () => {
   const { status } = useResume();
@@ -69,7 +69,12 @@ const Editor = () => {
   return (
     <ResumeProvider id={id}>
       <ThreePanelLayout
-        leftSidebar={<div className="text-center">Left Sidebar</div>}
+        leftSidebar={
+          <div>
+            <AtsScore />
+            <div className="mt-4 text-center">Left Sidebar</div>
+          </div>
+        }
         mainContent={<EditorContent />}
         rightPreview={<ResumePreview />}
       />
