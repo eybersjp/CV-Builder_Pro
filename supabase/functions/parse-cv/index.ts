@@ -1,7 +1,6 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { MultipartReader } from "https://deno.land/std@0.168.0/mime/multipart.ts";
+import { MultipartReader } from "https://deno.land/std@0.224.0/mime/multipart.ts";
 
 // Read .pdf using pdf.js Deno port
 import { PDFDocument } from "https://cdn.skypack.dev/pdf-lib?dts";
