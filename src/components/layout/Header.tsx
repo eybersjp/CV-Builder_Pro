@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,7 +32,6 @@ const Header: React.FC = () => {
           className="h-9 w-9 md:h-10 md:w-10 object-contain"
           style={{ borderRadius: 6 }}
         />
-        <span className="hidden sm:inline">CV-Builder Pro</span>
       </Link>
       <nav className="ml-8 flex items-center gap-4 flex-1">
         {loggedIn && (
