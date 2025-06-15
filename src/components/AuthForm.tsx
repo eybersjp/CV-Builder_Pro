@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -58,9 +59,9 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={handleSubmit} autoComplete="off">
       {mode === "signup" && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Input
             name="first_name"
             aria-label="First name"
@@ -91,6 +92,7 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
         value={form.email}
         onChange={onChange}
         autoComplete="email"
+        inputMode="email"
         required
         disabled={loading}
       />
@@ -109,10 +111,10 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
       <Button
         type="submit"
         disabled={loading}
-        className="w-full"
+        className="w-full text-base font-semibold"
         variant="default"
       >
-        {loading ? (mode === "login" ? "Signing In..." : "Signing Up...") : (mode === "login" ? "Sign In" : "Sign Up")}
+        {loading ? (mode === "login" ? "Signing In..." : "Signing Up...") : (mode === "login" ? "Log In" : "Sign Up")}
       </Button>
       {error && <div className="text-destructive text-sm text-center">{error}</div>}
     </form>
