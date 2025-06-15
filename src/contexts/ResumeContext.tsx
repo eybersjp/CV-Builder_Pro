@@ -1,4 +1,5 @@
 
+import React from "react";
 import { useResumeStore } from "@/stores/useResumeStore";
 
 // This file is now deprecated! Use useResumeStore instead.
