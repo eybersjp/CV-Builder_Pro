@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -111,7 +110,7 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
         type="submit"
         disabled={loading}
         className="w-full"
-        variant="primary"
+        variant="default"
       >
         {loading ? (mode === "login" ? "Signing In..." : "Signing Up...") : (mode === "login" ? "Sign In" : "Sign Up")}
       </Button>

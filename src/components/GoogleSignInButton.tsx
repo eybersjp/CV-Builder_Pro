@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { FcGoogle } from "react-icons/fc";
+import { CircleUser } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 
@@ -33,7 +33,7 @@ const GoogleSignInButton = () => {
       type="button"
       aria-label="Sign in with Google"
     >
-      <span className="text-lg"><FcGoogle /></span>
+      <span className="text-lg"><CircleUser size={22} /></span>
       {loading ? "Connecting..." : "Sign in with Google"}
     </Button>
   );
