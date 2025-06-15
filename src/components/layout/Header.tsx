@@ -26,8 +26,14 @@ const Header: React.FC = () => {
   return (
     <header className="flex items-center py-4 px-6 border-b border-border bg-background min-h-14 w-full">
       {/* App Logo/Name */}
-      <Link to="/" className="text-xl font-bold text-primary tracking-tight hover:opacity-80 transition">
-        CV-Builder Pro
+      <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary tracking-tight hover:opacity-80 transition">
+        <img
+          src="/logo.png"
+          alt="CV-Builder Pro logo"
+          className="h-9 w-9 md:h-10 md:w-10 object-contain"
+          style={{ borderRadius: 6 }}
+        />
+        <span className="hidden sm:inline">CV-Builder Pro</span>
       </Link>
       <nav className="ml-8 flex items-center gap-4 flex-1">
         {loggedIn && (
@@ -48,3 +54,4 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+

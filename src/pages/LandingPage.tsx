@@ -56,7 +56,7 @@ const LandingPage = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary">
             <span>
-              <img src="/placeholder.svg" alt="CV-Builder Pro" className="h-9 w-9" />
+              <img src="/logo.png" alt="CV-Builder Pro logo" className="h-9 w-9 md:h-11 md:w-11 object-contain rounded-[6px]" />
             </span>
             CV-Builder Pro
           </Link>
