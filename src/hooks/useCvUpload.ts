@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,10 +39,8 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         } catch (error: any) {
           // -- Detailed error handling
           console.log(error);
-          toast({
-            title: "Upload Failed",
+          toast.error("Upload Failed", {
             description: error?.message || "Unable to parse CV.",
-            variant: "destructive",
             id: toastId,
           });
           return;
@@ -89,12 +86,10 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         }
       } catch (err: any) {
         console.log(err);
-        toast({
-          title: "Upload Failed",
+        toast.error("Upload Failed", {
           description:
             err?.message ||
             "Failed to parse CV. Please ensure it is a valid PDF or DOCX file and try again.",
-          variant: "destructive",
           id: toastId,
         });
       }
