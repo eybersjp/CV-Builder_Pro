@@ -75,7 +75,7 @@ const Dashboard = () => {
   });
 
   // Create resume mutation
-  const { mutate: handleCreateResume, isLoading: creating } = useMutation({
+  const createResumeMutation = useMutation({
     mutationFn: async () => {
       if (!userProfile) throw new Error("No user profile loaded.");
       return await createResume({ userId: userProfile.id });
@@ -93,8 +93,8 @@ const Dashboard = () => {
 
   // Handlers
   const onCreateResume = useCallback(() => {
-    handleCreateResume();
-  }, [handleCreateResume]);
+    createResumeMutation.mutate();
+  }, [createResumeMutation]);
 
   const onCardClick = useCallback(
     (resumeId: string) => {
@@ -120,9 +120,9 @@ const Dashboard = () => {
             onClick={onCreateResume}
             size="lg"
             className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
-            disabled={creating}
+            disabled={createResumeMutation.isLoading}
           >
-            <Plus className="mr-2" /> {creating ? "Creating..." : "Create New Resume"}
+            <Plus className="mr-2" /> {createResumeMutation.isLoading ? "Creating..." : "Create New Resume"}
           </Button>
         </div>
       </header>
@@ -171,9 +171,9 @@ const Dashboard = () => {
               onClick={onCreateResume}
               size="lg"
               className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
-              disabled={creating}
+              disabled={createResumeMutation.isLoading}
             >
-              <Plus className="mr-2" /> {creating ? "Creating..." : "Create New Resume"}
+              <Plus className="mr-2" /> {createResumeMutation.isLoading ? "Creating..." : "Create New Resume"}
             </Button>
           </div>
         )}
