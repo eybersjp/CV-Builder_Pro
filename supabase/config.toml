@@ -1,3 +1,4 @@
+
 project_id = "dgtralqrsgmtqlyiivej"
 
 [functions.generate-pdf]
@@ -11,3 +12,9 @@ verify_jwt = false
 
 [functions.parse-cv]
 verify_jwt = true
+
+[functions.initialize-paystack-transaction]
+verify_jwt = true
+
+[functions.paystack-webhook]
+verify_jwt = false
