@@ -1,12 +1,11 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { MultipartReader } from "https://deno.land/std@0.224.0/http/multipart_reader.ts";
-
-// Read .pdf using pdf.js Deno port
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { MultipartReader } from "https://deno.land/std@0.224.0/http/mod.ts";
 import { PDFDocument } from "https://cdn.skypack.dev/pdf-lib?dts";
-
-// Read .docx using docx-reading Deno module
 import JSZip from "https://cdn.skypack.dev/jszip?dts";
+
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+// Read .pdf using pdf.js Deno port
+// Read .docx using docx-reading Deno module
 
 const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
 
