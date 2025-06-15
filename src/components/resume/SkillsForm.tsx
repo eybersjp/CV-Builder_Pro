@@ -1,26 +1,31 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useResume } from "@/contexts/ResumeContext";
 
 const SKILL_PLACEHOLDER = [
   "JavaScript", "Public Speaking", "Project Management", "Salesforce"
 ];
 
 const SkillsForm: React.FC = () => {
-  const [skills, setSkills] = useState<string[]>([]);
+  const { resume, updateSection } = useResume();
+  const skills: string[] = resume?.data?.skills || [];
+  const [newSkill, setNewSkill] = React.useState("");
 
-  const [newSkill, setNewSkill] = useState("");
+  const setSkillsList = (list: string[]) => {
+    updateSection("skills", list);
+  };
 
   const addSkill = () => {
-    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
-      setSkills([...skills, newSkill.trim()]);
+    const skill = newSkill.trim();
+    if (skill && !skills.includes(skill)) {
+      setSkillsList([...skills, skill]);
       setNewSkill("");
     }
   };
 
   const removeSkill = (skill: string) => {
-    setSkills(skills.filter((s) => s !== skill));
+    setSkillsList(skills.filter((s) => s !== skill));
   };
 
   return (

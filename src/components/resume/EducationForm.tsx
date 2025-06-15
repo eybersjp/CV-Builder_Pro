@@ -1,8 +1,8 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useResume } from "@/contexts/ResumeContext";
 
 interface EducationItem {
   id: string;
@@ -23,7 +23,12 @@ const defaultEducation: EducationItem = {
 };
 
 const EducationForm: React.FC = () => {
-  const [education, setEducation] = useState<EducationItem[]>([]);
+  const { resume, updateSection } = useResume();
+  const education: EducationItem[] = resume?.data?.education || [];
+
+  const setEducationList = (list: EducationItem[]) => {
+    updateSection("education", list);
+  };
 
   const handleChange = (idx: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const updated = [...education];
@@ -31,18 +36,18 @@ const EducationForm: React.FC = () => {
       ...updated[idx],
       [e.target.name]: e.target.value,
     };
-    setEducation(updated);
+    setEducationList(updated);
   };
 
   const addEducation = () => {
-    setEducation([
+    setEducationList([
       ...education,
       { ...defaultEducation, id: Date.now().toString() },
     ]);
   };
 
   const removeEducation = (idx: number) => {
-    setEducation(education.filter((_, i) => i !== idx));
+    setEducationList(education.filter((_, i) => i !== idx));
   };
 
   return (

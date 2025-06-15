@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useResume } from "@/contexts/ResumeContext";
 
 interface PersonalInfo {
   fullName: string;
@@ -12,7 +12,7 @@ interface PersonalInfo {
   summary: string;
 }
 
-const defaultPersonalInfo: PersonalInfo = {
+const defaultPersonalInfo = {
   fullName: "",
   email: "",
   phone: "",
@@ -20,13 +20,11 @@ const defaultPersonalInfo: PersonalInfo = {
 };
 
 const PersonalInfoForm: React.FC = () => {
-  const [info, setInfo] = useState<PersonalInfo>(defaultPersonalInfo);
+  const { resume, updateSection } = useResume();
+  const personalInfo = resume?.data?.personalInfo || defaultPersonalInfo;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setInfo({
-      ...info,
-      [e.target.name]: e.target.value,
-    });
+    updateSection("personalInfo", { ...personalInfo, [e.target.name]: e.target.value });
   };
 
   return (
@@ -39,7 +37,7 @@ const PersonalInfoForm: React.FC = () => {
             id="fullName"
             name="fullName"
             placeholder="Your full name"
-            value={info.fullName}
+            value={personalInfo.fullName}
             onChange={handleChange}
           />
         </div>
@@ -49,7 +47,7 @@ const PersonalInfoForm: React.FC = () => {
             id="email"
             name="email"
             placeholder="you@example.com"
-            value={info.email}
+            value={personalInfo.email}
             onChange={handleChange}
           />
         </div>
@@ -59,7 +57,7 @@ const PersonalInfoForm: React.FC = () => {
             id="phone"
             name="phone"
             placeholder="(555) 123-4567"
-            value={info.phone}
+            value={personalInfo.phone}
             onChange={handleChange}
           />
         </div>
@@ -69,7 +67,7 @@ const PersonalInfoForm: React.FC = () => {
             id="summary"
             name="summary"
             placeholder="Professional summary or objective"
-            value={info.summary}
+            value={personalInfo.summary}
             onChange={handleChange}
             rows={3}
           />

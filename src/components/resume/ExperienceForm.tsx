@@ -1,8 +1,8 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useResume } from "@/contexts/ResumeContext";
 
 interface ExperienceItem {
   id: string;
@@ -23,7 +23,12 @@ const defaultExperience: ExperienceItem = {
 };
 
 const ExperienceForm: React.FC = () => {
-  const [experience, setExperience] = useState<ExperienceItem[]>([]);
+  const { resume, updateSection } = useResume();
+  const experience: ExperienceItem[] = resume?.data?.experience || [];
+
+  const setExperienceList = (list: ExperienceItem[]) => {
+    updateSection("experience", list);
+  };
 
   const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const updated = [...experience];
@@ -31,18 +36,18 @@ const ExperienceForm: React.FC = () => {
       ...updated[index],
       [e.target.name]: e.target.value,
     };
-    setExperience(updated);
+    setExperienceList(updated);
   };
 
   const addExperience = () => {
-    setExperience([
+    setExperienceList([
       ...experience,
       { ...defaultExperience, id: Date.now().toString() },
     ]);
   };
 
   const removeExperience = (index: number) => {
-    setExperience(experience.filter((_, i) => i !== index));
+    setExperienceList(experience.filter((_, i) => i !== index));
   };
 
   return (
