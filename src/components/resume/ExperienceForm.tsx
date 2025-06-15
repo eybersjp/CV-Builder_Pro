@@ -1,19 +1,11 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useResume } from "@/contexts/ResumeContext";
 
-interface ExperienceItem {
-  id: string;
-  jobTitle: string;
-  company: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
-const defaultExperience: ExperienceItem = {
+const defaultExperience = {
   id: "",
   jobTitle: "",
   company: "",
@@ -23,26 +15,24 @@ const defaultExperience: ExperienceItem = {
 };
 
 const ExperienceForm: React.FC = () => {
-  const [experience, setExperience] = useState<ExperienceItem[]>([]);
+  const { resume, updateSection } = useResume();
+  const experience: any[] = Array.isArray(resume?.data?.experience) ? resume.data.experience : [];
 
   const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const updated = [...experience];
     updated[index] = { ...updated[index], [e.target.name]: e.target.value };
-    setExperience(updated);
+    updateSection("experience", updated);
   };
 
   const addExperience = () => {
-    setExperience([...experience, { ...defaultExperience, id: Date.now().toString() }]);
+    updateSection("experience", [
+      ...experience,
+      { ...defaultExperience, id: Date.now().toString() },
+    ]);
   };
 
   const removeExperience = (index: number) => {
-    setExperience(experience.filter((_, i) => i !== index));
-  };
-
-  // Demo submit
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert("Experience: " + JSON.stringify(experience, null, 2));
+    updateSection("experience", experience.filter((_: any, i: number) => i !== index));
   };
 
   return (
@@ -51,11 +41,11 @@ const ExperienceForm: React.FC = () => {
         <h2 className="text-xl font-semibold">Experience</h2>
         <Button variant="outline" size="sm" type="button" onClick={addExperience}>Add</Button>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <form className="flex flex-col gap-6" onSubmit={e => e.preventDefault()}>
         {experience.length === 0 && (
           <span className="text-muted-foreground">No experience added yet.</span>
         )}
-        {experience.map((item, idx) => (
+        {experience.map((item: any, idx: number) => (
           <div key={item.id} className="border rounded-lg p-4 flex flex-col gap-3 bg-muted/30 relative">
             <Button
               variant="destructive"
@@ -103,7 +93,6 @@ const ExperienceForm: React.FC = () => {
             />
           </div>
         ))}
-        <Button type="submit" className="w-fit mt-1">Save Experience</Button>
       </form>
     </section>
   );
