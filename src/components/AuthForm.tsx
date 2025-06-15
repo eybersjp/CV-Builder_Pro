@@ -24,7 +24,7 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
     if (mode === "signup") {
       // sign up: send extra profile fields in metadata
       const { email, password, first_name, last_name } = form;
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/dashboard`;
 
       const { error } = await supabase.auth.signUp({
         email,
@@ -40,7 +40,7 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
         toast({ title: "Sign Up Failed", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Sign Up Successful", description: "Check your email to confirm your account!" });
-        setTimeout(() => navigate("/"), 1600);
+        setTimeout(() => navigate("/dashboard"), 1600);
       }
     } else {
       // login
@@ -51,7 +51,7 @@ const AuthForm = ({ mode }: { mode: AuthMode }) => {
         toast({ title: "Sign In Failed", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Welcome back!" });
-        setTimeout(() => navigate("/"), 1200);
+        setTimeout(() => navigate("/dashboard"), 1200);
       }
     }
     setLoading(false);
