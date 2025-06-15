@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor";
 import Templates from "./pages/Templates";
 import Settings from "./pages/Settings";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/editor/:id" element={<Editor />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
