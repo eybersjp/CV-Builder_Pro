@@ -8,6 +8,8 @@ import EducationForm from "@/components/resume/EducationForm";
 import SkillsForm from "@/components/resume/SkillsForm";
 import ResumePreview from "@/components/resume/ResumePreview";
 import { ResumeProvider, useResume } from "@/contexts/ResumeContext";
+import { usePDFExport } from "@/hooks/usePDFExport";
+import { Download, Loader } from "lucide-react";
 
 const SaveStatus = () => {
   const { status } = useResume();
@@ -20,9 +22,37 @@ const SaveStatus = () => {
   );
 };
 
+const DownloadPDFButton = () => {
+  const { downloadPDF, loading } = usePDFExport();
+  return (
+    <button
+      disabled={loading}
+      onClick={downloadPDF}
+      className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium shadow hover:bg-primary/90 disabled:opacity-60 transition disabled:cursor-not-allowed ml-auto"
+      aria-busy={loading}
+      aria-label="Download PDF"
+    >
+      {loading ? (
+        <>
+          <Loader className="animate-spin" /> Generating PDF...
+        </>
+      ) : (
+        <>
+          <Download /> Download PDF
+        </>
+      )}
+    </button>
+  );
+};
+
 const EditorContent = () => (
   <div>
-    <h1 className="text-2xl font-bold mb-2">Resume Editor</h1>
+    <div className="flex items-center mb-2">
+      <h1 className="text-2xl font-bold">Resume Editor</h1>
+      <div className="ml-auto flex items-center">
+        <DownloadPDFButton />
+      </div>
+    </div>
     <SaveStatus />
     <PersonalInfoForm />
     <ExperienceForm />
