@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { useResume } from "@/contexts/ResumeContext";
 import { Progress } from "@/components/ui/progress";
@@ -31,6 +30,8 @@ function resumeTextFromData(data: any): string {
   ];
   return sections.filter(Boolean).join(" ");
 }
+
+export { keywordMatchScore, resumeTextFromData };
 
 const CircularProgress = ({ value }: { value: number }) => {
   // value: 0-100

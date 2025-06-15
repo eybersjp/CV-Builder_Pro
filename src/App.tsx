@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Pricing from "./pages/Pricing";
 import LandingPage from "./pages/LandingPage";
 import React, { Suspense, lazy } from "react";
+import Settings from "./pages/Settings";
 
 // Lazy load heavy pages
 const Editor = lazy(() => import("./pages/Editor"));

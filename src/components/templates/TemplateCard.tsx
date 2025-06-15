@@ -8,6 +8,10 @@ interface TemplateCardProps {
   is_premium?: boolean;
   selected?: boolean;
   onClick?: () => void;
+  tabIndex?: number;
+  "aria-label"?: string;
+  role?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
@@ -16,6 +20,10 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   is_premium,
   selected,
   onClick,
+  tabIndex,
+  "aria-label": ariaLabel,
+  role,
+  onKeyDown,
 }) => (
   <button
     className={cn(
@@ -24,8 +32,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     )}
     onClick={onClick}
     aria-pressed={selected}
-    aria-label={`Template: ${name}${selected ? " (selected)" : ""}`}
+    aria-label={ariaLabel || `Template: ${name}${selected ? " (selected)" : ""}`}
     type="button"
+    tabIndex={tabIndex}
+    role={role}
+    onKeyDown={onKeyDown}
   >
     <div className="aspect-video overflow-hidden rounded bg-muted relative mb-2">
       <img
