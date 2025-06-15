@@ -27,6 +27,10 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         const formData = new FormData();
         formData.append("file", file);
 
+        // Correctly get access token for Authorization header
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData.session?.access_token ?? "";
+
         // POST to the parse-cv edge function
         const response = await fetch(
           `https://dgtralqrsgmtqlyiivej.functions.supabase.co/parse-cv`,
@@ -34,9 +38,7 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
             method: "POST",
             body: formData,
             headers: {
-              Authorization: `Bearer ${supabase.auth.getAccessToken
-                ? (await supabase.auth.getAccessToken()).data?.access_token ?? ""
-                : ""}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
