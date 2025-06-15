@@ -3,3 +3,6 @@ project_id = "dgtralqrsgmtqlyiivej"
 
 [functions.generate-pdf]
 verify_jwt = false
+
+[functions.openai-suggest]
+verify_jwt = true

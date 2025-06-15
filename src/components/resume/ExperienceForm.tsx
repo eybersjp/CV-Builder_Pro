@@ -1,8 +1,12 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useResume } from "@/contexts/ResumeContext";
+import { Sparkles, Loader, ClipboardCopy } from "lucide-react";
+import { useAISuggest } from "@/hooks/useAISuggest";
+import Modal from "../ui/Modal";
 
 interface ExperienceItem {
   id: string;
@@ -48,6 +52,37 @@ const ExperienceForm: React.FC = () => {
 
   const removeExperience = (index: number) => {
     setExperienceList(experience.filter((_, i) => i !== index));
+  };
+
+  // For AI Suggest modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalIdx, setModalIdx] = useState<number | null>(null);
+  const { suggestions, loading, error, fetchSuggestions, setSuggestions, setError } = useAISuggest();
+
+  const handleAISuggest = (idx: number) => {
+    const exp = experience[idx];
+    if (!exp.jobTitle || !exp.company) {
+      setSuggestions(null);
+      setError("Please enter both Job Title and Company first.");
+      setModalOpen(true);
+      setModalIdx(idx);
+      return;
+    }
+    setSuggestions(null);
+    setModalOpen(true);
+    setModalIdx(idx);
+    fetchSuggestions(exp.jobTitle, exp.company);
+  };
+
+  const handleCopy = () => {
+    if (!suggestions) return;
+    navigator.clipboard.writeText(suggestions.replace(/^- /gm, "")).catch(() => {});
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSuggestions(null);
+    setError(null);
   };
 
   return (
@@ -99,16 +134,62 @@ const ExperienceForm: React.FC = () => {
                 onChange={e => handleChange(idx, e)}
               />
             </div>
-            <Textarea
-              name="description"
-              placeholder="Describe your responsibilities, achievements, etc."
-              value={item.description}
-              onChange={e => handleChange(idx, e)}
-              rows={3}
-            />
+            <div className="relative">
+              <Textarea
+                name="description"
+                placeholder="Describe your responsibilities, achievements, etc."
+                value={item.description}
+                onChange={e => handleChange(idx, e)}
+                rows={3}
+              />
+              <Button
+                type="button"
+                className="absolute top-1 right-1"
+                size="sm"
+                variant="secondary"
+                tabIndex={-1}
+                onClick={() => handleAISuggest(idx)}
+                aria-label="AI Suggest"
+              >
+                <Sparkles className="mr-1 h-4 w-4" /> AI Suggest
+              </Button>
+            </div>
           </div>
         ))}
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={closeModal}
+        title="AI Suggestions"
+      >
+        {loading ? (
+          <div className="flex gap-2 items-center py-8 justify-center text-muted-foreground">
+            <Loader className="animate-spin" /> Generating suggestions...
+          </div>
+        ) : error ? (
+          <div className="text-destructive">{error}</div>
+        ) : suggestions ? (
+          <div>
+            <div
+              className="whitespace-pre-line mb-4"
+              style={{ fontFamily: "Inter, sans-serif" }}
+              dangerouslySetInnerHTML={{
+                __html: suggestions
+                  .replace(/^- /gm, "<li>")
+                  .replace(/\n/g, "</li>\n")
+                  .replace(/<li><\/li>/g, '') // remove empty
+                  .replace(/^/, "<ul class='list-disc pl-5'>")
+                  .replace(/$/, "</ul>")
+              }}
+            />
+            <Button onClick={handleCopy} variant="outline" size="sm" className="gap-2">
+              <ClipboardCopy className="h-4 w-4" /> Copy All
+            </Button>
+          </div>
+        ) : (
+          <span className="text-muted-foreground">Suggestions will appear here.</span>
+        )}
+      </Modal>
     </section>
   );
 };
