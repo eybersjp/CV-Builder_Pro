@@ -8,9 +8,12 @@ export const useSubscription = () => {
   useEffect(() => {
     // Try to fetch the user's own subscription
     const fetch = async () => {
-      const { data, error } = await supabase.from("subscriptions")
-        .select("plan, status")
-        .single();
+      // Use 'as any' to access subscriptions table missing from types
+      const { data, error } = await (supabase as any)
+        .from("subscriptions")
+        .select("plan,status")
+        .maybeSingle();
+
       // Consider pro if plan is 'pro' and status is 'active'
       if (!error && data?.plan === "pro" && data?.status === "active") {
         setIsPro(true);
