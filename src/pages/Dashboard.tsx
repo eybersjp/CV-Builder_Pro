@@ -8,6 +8,8 @@ import { format } from "date-fns";
 import { Plus, FileText, Upload } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
+import { useCvUpload } from "@/hooks/useCvUpload";
+
 // Fetch current user profile (first name)
 async function fetchUserProfile() {
   const { data: { user } } = await supabase.auth.getUser();
@@ -91,6 +93,15 @@ const Dashboard = () => {
     },
   });
 
+  // Custom hook for CV upload/parse/import
+  const { uploadAndParseCv } = useCvUpload({
+    userId: userProfile?.id,
+    onSuccess: (resumeId: string) => {
+      // Already handled by hook, but allows custom navigation if needed
+      navigate(`/editor/${resumeId}`);
+    },
+  });
+
   // Handlers
   const onCreateResume = useCallback(() => {
     createResumeMutation.mutate();
@@ -103,8 +114,7 @@ const Dashboard = () => {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    // For now, just show a toast and clear input
-    toast.info(`Selected file: ${file.name}`);
+    uploadAndParseCv(file);
     e.target.value = ""; // Reset input so the same file can be picked again
   };
 
@@ -115,7 +125,6 @@ const Dashboard = () => {
     [navigate]
   );
 
-  // Render logic
   return (
     <main className="max-w-6xl mx-auto px-4 pt-8 pb-16 min-h-screen font-inter">
       {/* Welcome Header */}
