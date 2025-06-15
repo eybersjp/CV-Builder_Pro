@@ -1,3 +1,4 @@
+
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +10,12 @@ type HookOptions = {
   onSuccess?: (resumeId: string) => void;
 };
 
+const MAX_FILE_SIZE_MB = 10;
+const ACCEPTED_FILE_TYPES = [
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -19,6 +26,23 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         toast.error("User not loaded. Please sign in again.");
         return;
       }
+      // File size validation
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        toast.error("File is too large. Maximum allowed file size is 10MB.");
+        return;
+      }
+      // Basic type validation (reliable for PDF, less so for DOCX, but still good UX)
+      if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
+        toast.error("Unsupported file type. Only PDF and DOCX files are accepted.");
+        return;
+      }
+
+      // Security log: user started upload
+      console.info(
+        "[SECURITY] User initiated CV upload",
+        { name: file.name, type: file.type, size: file.size }
+      );
+
       const toastId = toast.loading("Parsing your CV, this may take a moment...");
 
       try {
@@ -33,14 +57,14 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
             body: formData,
           });
           if (error) {
-            throw error;
+            // Do not leak internal errors to user
+            throw new Error("Unable to parse CV. Please try again later.");
           }
           result = data;
         } catch (error: any) {
-          // -- Detailed error handling
-          console.log(error);
+          console.error("[SECURITY] CV upload backend error", error);
           toast.error("Upload Failed", {
-            description: error?.message || "Unable to parse CV.",
+            description: "Unable to parse CV. Please check your file and try again.",
             id: toastId,
           });
           return;
@@ -50,7 +74,7 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
 
         if (parseError || !resume) {
           throw new Error(
-            parseError || "Failed to parse CV. Please make sure the file is a valid PDF or DOCX and try again."
+            "Failed to parse CV. Please make sure the file is a valid PDF or DOCX and try again."
           );
         }
 
@@ -70,8 +94,9 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
           .single();
 
         if (dbError) {
+          console.error("[SECURITY] Supabase resumes insert error", dbError);
           throw new Error(
-            dbError.message || "Resume could not be saved. Please try again."
+            "Resume could not be saved. Please try again later."
           );
         }
 
@@ -85,10 +110,10 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
           navigate(`/editor/${dbData.id}`);
         }
       } catch (err: any) {
-        console.log(err);
+        // Only show generic errors to the user
+        console.error("[SECURITY] Unexpected CV upload error", err);
         toast.error("Upload Failed", {
           description:
-            err?.message ||
             "Failed to parse CV. Please ensure it is a valid PDF or DOCX file and try again.",
           id: toastId,
         });
