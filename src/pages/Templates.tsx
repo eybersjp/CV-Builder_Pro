@@ -13,7 +13,8 @@ const Templates = () => {
   // Assume possible usage from editor page context.
   const { resume, updateSection } = useResume();
 
-  const currentTemplateId = resume?.template_id || resume?.data?.template_id;
+  // FIX: Safely access template_id from resume.data
+  const currentTemplateId = resume?.data?.template_id || "";
 
   // Handler to set template_id for this resume
   const handleSelect = (templateId: string) => {
@@ -46,3 +47,4 @@ const Templates = () => {
 };
 
 export default Templates;
+
