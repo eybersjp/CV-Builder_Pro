@@ -107,7 +107,7 @@ const Dashboard = () => {
     <main className="max-w-6xl mx-auto px-4 pt-8 pb-16 min-h-screen font-inter">
       {/* Welcome Header */}
       <header className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground" tabIndex={0}>
           {profileLoading
             ? "Loading..."
             : profileError
@@ -120,8 +120,9 @@ const Dashboard = () => {
             size="lg"
             className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
             disabled={createResumeMutation.isPending}
+            aria-label="Create New Resume"
           >
-            <Plus className="mr-2" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
+            <Plus className="mr-2" aria-hidden="true" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
           </Button>
         </div>
       </header>
@@ -129,9 +130,9 @@ const Dashboard = () => {
       {/* Resume List or Empty State */}
       <section>
         {resumesLoading ? (
-          <div className="text-muted-foreground text-center pt-12">Loading your resumes...</div>
+          <div className="text-muted-foreground text-center pt-12" aria-live="polite">Loading your resumes...</div>
         ) : resumesError ? (
-          <div className="text-destructive text-center pt-12">Failed to load resumes.</div>
+          <div className="text-destructive text-center pt-12" aria-live="polite">Failed to load resumes.</div>
         ) : resumes && resumes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-2">
             {resumes.map((resume: { id: string; title: string; updated_at: string | null }) => (
@@ -139,7 +140,7 @@ const Dashboard = () => {
                 key={resume.id}
                 tabIndex={0}
                 role="button"
-                aria-label={`Edit resume: ${resume.title}`}
+                aria-label={`Edit resume: ${resume.title || "Untitled Resume"}`}
                 className="cursor-pointer focus:ring-2 focus:ring-primary focus:outline-none transition hover:shadow-lg"
                 onClick={() => onCardClick(resume.id)}
                 onKeyDown={e => {
@@ -147,10 +148,13 @@ const Dashboard = () => {
                     onCardClick(resume.id);
                   }
                 }}
+                aria-pressed="false"
               >
                 <CardHeader className="flex flex-row items-center gap-3 pb-2">
-                  <FileText className="text-primary" aria-hidden="true" />
-                  <CardTitle className="truncate flex-1 text-base">{resume.title}</CardTitle>
+                  <FileText className="text-primary" aria-hidden="true" focusable="false" />
+                  <CardTitle className="truncate flex-1 text-base">
+                    <span>{resume.title}</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -165,14 +169,15 @@ const Dashboard = () => {
         ) : (
           // Empty state
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="text-lg font-semibold text-foreground">You haven't created any resumes yet.</div>
+            <div className="text-lg font-semibold text-foreground" tabIndex={0}>You haven't created any resumes yet.</div>
             <Button
               onClick={onCreateResume}
               size="lg"
               className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
               disabled={createResumeMutation.isPending}
+              aria-label="Create New Resume"
             >
-              <Plus className="mr-2" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
+              <Plus className="mr-2" aria-hidden="true" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
             </Button>
           </div>
         )}
