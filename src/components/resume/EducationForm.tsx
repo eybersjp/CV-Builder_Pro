@@ -1,8 +1,8 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useResume } from "@/contexts/ResumeContext";
 
 interface EducationItem {
   id: string;
@@ -23,12 +23,7 @@ const defaultEducation: EducationItem = {
 };
 
 const EducationForm: React.FC = () => {
-  const { resume, updateSection } = useResume();
-  const education: EducationItem[] = resume?.data?.education || [];
-
-  const setEducationList = (list: EducationItem[]) => {
-    updateSection("education", list);
-  };
+  const [education, setEducation] = useState<EducationItem[]>([]);
 
   const handleChange = (idx: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const updated = [...education];
@@ -36,18 +31,23 @@ const EducationForm: React.FC = () => {
       ...updated[idx],
       [e.target.name]: e.target.value,
     };
-    setEducationList(updated);
+    setEducation(updated);
   };
 
   const addEducation = () => {
-    setEducationList([
+    setEducation([
       ...education,
       { ...defaultEducation, id: Date.now().toString() },
     ]);
   };
 
   const removeEducation = (idx: number) => {
-    setEducationList(education.filter((_, i) => i !== idx));
+    setEducation(education.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert("Education: " + JSON.stringify(education, null, 2));
   };
 
   return (
@@ -56,7 +56,7 @@ const EducationForm: React.FC = () => {
         <h2 className="text-xl font-semibold">Education</h2>
         <Button variant="outline" size="sm" type="button" onClick={addEducation}>Add</Button>
       </div>
-      <div className="flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {education.length === 0 && (
           <span className="text-muted-foreground">No education history yet.</span>
         )}
@@ -108,9 +108,11 @@ const EducationForm: React.FC = () => {
             />
           </div>
         ))}
-      </div>
+        <Button type="submit" className="w-fit mt-1">Save Education</Button>
+      </form>
     </section>
   );
 };
 
 export default EducationForm;
+

@@ -1,9 +1,9 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useResume } from "@/contexts/ResumeContext";
 
 interface PersonalInfo {
   fullName: string;
@@ -12,7 +12,7 @@ interface PersonalInfo {
   summary: string;
 }
 
-const defaultPersonalInfo = {
+const defaultPersonalInfo: PersonalInfo = {
   fullName: "",
   email: "",
   phone: "",
@@ -20,17 +20,22 @@ const defaultPersonalInfo = {
 };
 
 const PersonalInfoForm: React.FC = () => {
-  const { resume, updateSection } = useResume();
-  const personalInfo = resume?.data?.personalInfo || defaultPersonalInfo;
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(defaultPersonalInfo);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    updateSection("personalInfo", { ...personalInfo, [e.target.name]: e.target.value });
+    setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
+  };
+
+  // For demonstration, on submit show alert (will remove in real integration)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert("Personal Info: " + JSON.stringify(personalInfo, null, 2));
   };
 
   return (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-      <div className="grid gap-4">
+      <form onSubmit={handleSubmit} className="grid gap-4">
         <div>
           <Label htmlFor="fullName">Full Name</Label>
           <Input
@@ -72,9 +77,11 @@ const PersonalInfoForm: React.FC = () => {
             rows={3}
           />
         </div>
-      </div>
+        <Button type="submit" className="w-fit">Save Personal Info</Button>
+      </form>
     </section>
   );
 };
 
 export default PersonalInfoForm;
+
