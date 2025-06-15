@@ -27,42 +27,38 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         const formData = new FormData();
         formData.append("file", file);
 
-        // Correctly get access token for Authorization header
-        const { data: sessionData } = await supabase.auth.getSession();
-        const accessToken = sessionData.session?.access_token ?? "";
-
-        // POST to the parse-cv edge function
-        const response = await fetch(
-          `https://dgtralqrsgmtqlyiivej.functions.supabase.co/parse-cv`,
-          {
-            method: "POST",
+        // Use supabase.functions.invoke for calling the parse-cv edge function
+        let result;
+        try {
+          const { data, error } = await supabase.functions.invoke("parse-cv", {
             body: formData,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+          });
+          if (error) {
+            throw error;
           }
-        );
+          result = data;
+        } catch (error: any) {
+          // -- Detailed error handling
+          console.log(error);
+          toast({
+            title: "Upload Failed",
+            description: error?.message || "Unable to parse CV.",
+            variant: "destructive",
+            id: toastId,
+          });
+          return;
+        }
 
-        if (!response.ok) {
-          let errText;
-          try {
-            errText = await response.text();
-          } catch {}
+        const { resume, error: parseError } = result || {};
+
+        if (parseError || !resume) {
           throw new Error(
-            errText && errText.startsWith("{")
-              ? JSON.parse(errText).error || "Unknown error"
-              : errText || "Failed to parse CV (edge function error)"
+            parseError || "Failed to parse CV. Please make sure the file is a valid PDF or DOCX and try again."
           );
         }
 
-        const { resume, error } = await response.json();
-
-        if (error || !resume) {
-          throw new Error(error || "Failed to parse CV. Please make sure the file is a valid PDF or DOCX and try again.");
-        }
-
         // Insert the resume into Supabase resumes table
-        const { data, error: dbError } = await supabase
+        const { data: dbData, error: dbError } = await supabase
           .from("resumes")
           .insert([
             {
@@ -87,16 +83,20 @@ export function useCvUpload({ userId, onSuccess }: HookOptions = {}) {
         await queryClient.invalidateQueries({ queryKey: ["resumes", userId] });
 
         if (onSuccess) {
-          onSuccess(data.id);
+          onSuccess(dbData.id);
         } else {
-          navigate(`/editor/${data.id}`);
+          navigate(`/editor/${dbData.id}`);
         }
       } catch (err: any) {
-        toast.error(
-          err?.message ||
+        console.log(err);
+        toast({
+          title: "Upload Failed",
+          description:
+            err?.message ||
             "Failed to parse CV. Please ensure it is a valid PDF or DOCX file and try again.",
-          { id: toastId }
-        );
+          variant: "destructive",
+          id: toastId,
+        });
       }
     },
     [userId, onSuccess, navigate, queryClient]
