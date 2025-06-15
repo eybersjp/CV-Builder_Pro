@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface PersonalInfo {
   fullName: string;
@@ -32,34 +33,47 @@ const PersonalInfoForm: React.FC = () => {
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
       <div className="grid gap-4">
-        <Input
-          label="Full Name"
-          name="fullName"
-          placeholder="Your full name"
-          value={info.fullName}
-          onChange={handleChange}
-        />
-        <Input
-          label="Email"
-          name="email"
-          placeholder="you@example.com"
-          value={info.email}
-          onChange={handleChange}
-        />
-        <Input
-          label="Phone"
-          name="phone"
-          placeholder="(555) 123-4567"
-          value={info.phone}
-          onChange={handleChange}
-        />
-        <Textarea
-          name="summary"
-          placeholder="Professional summary or objective"
-          value={info.summary}
-          onChange={handleChange}
-          rows={3}
-        />
+        <div>
+          <Label htmlFor="fullName">Full Name</Label>
+          <Input
+            id="fullName"
+            name="fullName"
+            placeholder="Your full name"
+            value={info.fullName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            value={info.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            id="phone"
+            name="phone"
+            placeholder="(555) 123-4567"
+            value={info.phone}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="summary">Summary</Label>
+          <Textarea
+            id="summary"
+            name="summary"
+            placeholder="Professional summary or objective"
+            value={info.summary}
+            onChange={handleChange}
+            rows={3}
+          />
+        </div>
       </div>
     </section>
   );
