@@ -2,7 +2,7 @@
 project_id = "dgtralqrsgmtqlyiivej"
 
 [functions.generate-pdf]
-verify_jwt = false
+verify_jwt = true
 
 [functions.openai-suggest]
 verify_jwt = true
@@ -18,3 +18,4 @@ verify_jwt = true
 
 [functions.paystack-webhook]
 verify_jwt = false
+
