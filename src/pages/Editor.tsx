@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import ThreePanelLayout from "@/components/layout/ThreePanelLayout";
@@ -11,6 +10,7 @@ import { ResumeProvider, useResume } from "@/contexts/ResumeContext";
 import { usePDFExport } from "@/hooks/usePDFExport";
 import { Download, Loader } from "lucide-react";
 import AtsScore from "@/components/ats/AtsScore";
+import Header from "@/components/layout/Header";
 
 const SaveStatus = () => {
   const { status } = useResume();
@@ -68,18 +68,21 @@ const Editor = () => {
   if (!id) return <div>No resume selected.</div>;
 
   return (
-    <ResumeProvider id={id}>
-      <ThreePanelLayout
-        leftSidebar={
-          <div>
-            <AtsScore />
-            <div className="mt-4 text-center">Left Sidebar</div>
-          </div>
-        }
-        mainContent={<EditorContent />}
-        rightPreview={<ResumePreview />}
-      />
-    </ResumeProvider>
+    <>
+      <Header />
+      <ResumeProvider id={id}>
+        <ThreePanelLayout
+          leftSidebar={
+            <div>
+              <AtsScore />
+              <div className="mt-4 text-center">Left Sidebar</div>
+            </div>
+          }
+          mainContent={<EditorContent />}
+          rightPreview={<ResumePreview />}
+        />
+      </ResumeProvider>
+    </>
   );
 };
 
