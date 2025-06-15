@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ThreePanelLayout from "@/components/layout/ThreePanelLayout";
 import PersonalInfoForm from "@/components/resume/PersonalInfoForm";
 import ExperienceForm from "@/components/resume/ExperienceForm";
@@ -8,9 +8,16 @@ import SkillsForm from "@/components/resume/SkillsForm";
 import ResumePreview from "@/components/resume/ResumePreview";
 import { ResumeProvider, useResume } from "@/contexts/ResumeContext";
 import { usePDFExport } from "@/hooks/usePDFExport";
-import { Download, Loader } from "lucide-react";
+import { Download, Loader, Home, ArrowLeft, Settings } from "lucide-react";
 import AtsScore from "@/components/ats/AtsScore";
 import Header from "@/components/layout/Header";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const SaveStatus = () => {
   const { status } = useResume();
@@ -62,6 +69,59 @@ const EditorContent = () => (
   </div>
 );
 
+const SidebarNavigation = () => {
+  const navigate = useNavigate();
+
+  return (
+    <TooltipProvider>
+      <div className="flex gap-2 mb-4">
+        {/* Dashboard Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Go to Dashboard"
+              onClick={() => navigate("/dashboard")}
+            >
+              <Home className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Go to Dashboard</TooltipContent>
+        </Tooltip>
+        {/* Back Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Go Back"
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Go back</TooltipContent>
+        </Tooltip>
+        {/* Settings Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Go to Settings"
+              onClick={() => navigate("/settings")}
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Go to Settings</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  );
+};
+
 const Editor = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -74,6 +134,7 @@ const Editor = () => {
         <ThreePanelLayout
           leftSidebar={
             <div>
+              <SidebarNavigation />
               <AtsScore />
               <div className="mt-4 text-center">Left Sidebar</div>
             </div>
