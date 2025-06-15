@@ -31,6 +31,7 @@ function resumeTextFromData(data: any): string {
   return sections.filter(Boolean).join(" ");
 }
 
+// FIXED: Ensure both functions are exported as named exports (for Vitest tests)
 export { keywordMatchScore, resumeTextFromData };
 
 const CircularProgress = ({ value }: { value: number }) => {

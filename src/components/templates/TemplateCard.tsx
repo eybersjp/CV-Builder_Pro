@@ -8,6 +8,7 @@ interface TemplateCardProps {
   is_premium?: boolean;
   selected?: boolean;
   onClick?: () => void;
+  // FIX BELOW: Add missing props for accessibility
   tabIndex?: number;
   "aria-label"?: string;
   role?: string;
