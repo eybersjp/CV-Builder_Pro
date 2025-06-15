@@ -1,4 +1,3 @@
-
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -120,9 +119,9 @@ const Dashboard = () => {
             onClick={onCreateResume}
             size="lg"
             className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
-            disabled={createResumeMutation.isLoading}
+            disabled={createResumeMutation.isPending}
           >
-            <Plus className="mr-2" /> {createResumeMutation.isLoading ? "Creating..." : "Create New Resume"}
+            <Plus className="mr-2" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
           </Button>
         </div>
       </header>
@@ -171,9 +170,9 @@ const Dashboard = () => {
               onClick={onCreateResume}
               size="lg"
               className="bg-primary text-white font-semibold px-5 py-3 rounded-lg text-base shadow hover:bg-primary/90 transition"
-              disabled={createResumeMutation.isLoading}
+              disabled={createResumeMutation.isPending}
             >
-              <Plus className="mr-2" /> {createResumeMutation.isLoading ? "Creating..." : "Create New Resume"}
+              <Plus className="mr-2" /> {createResumeMutation.isPending ? "Creating..." : "Create New Resume"}
             </Button>
           </div>
         )}
