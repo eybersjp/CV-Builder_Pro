@@ -1,4 +1,3 @@
-
 project_id = "dgtralqrsgmtqlyiivej"
 
 [functions.generate-pdf]
@@ -9,3 +8,6 @@ verify_jwt = true
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.parse-cv]
+verify_jwt = true
