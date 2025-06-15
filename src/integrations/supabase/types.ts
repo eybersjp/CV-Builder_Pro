@@ -60,6 +60,27 @@ export type Database = {
         }
         Relationships: []
       }
+      templates: {
+        Row: {
+          id: string
+          is_premium: boolean | null
+          name: string
+          preview_image_url: string | null
+        }
+        Insert: {
+          id?: string
+          is_premium?: boolean | null
+          name: string
+          preview_image_url?: string | null
+        }
+        Update: {
+          id?: string
+          is_premium?: boolean | null
+          name?: string
+          preview_image_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
